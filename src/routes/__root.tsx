@@ -11,6 +11,8 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { AdsProvider } from "@/components/reko/AdsProvider";
+import { Header } from "@/components/reko/Header";
 
 function NotFoundComponent() {
   return (
