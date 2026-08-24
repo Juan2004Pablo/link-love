@@ -24,6 +24,7 @@ export function Header() {
         </nav>
         <Link
           to="/buscar"
+          search={{ q: "" }}
           className="ml-auto inline-flex items-center gap-2 rounded-full bg-surface px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <Search className="size-4" />
@@ -39,7 +40,7 @@ export function Header() {
             className="whitespace-nowrap rounded-full bg-surface px-3 py-1.5 text-sm text-muted-foreground"
             activeProps={{ className: "bg-primary text-primary-foreground" }}
           >
-            {c.emoji} {c.label}
+            {c.label}
           </Link>
         ))}
       </nav>
