@@ -46,7 +46,7 @@ function CategoryPage() {
     <div className="mx-auto max-w-6xl px-4 pb-28 pt-6">
       <header className="rounded-3xl bg-surface p-6">
         <h1 className="font-display text-3xl font-bold">
-          {cat.emoji} {cat.label}
+          {cat.label}
         </h1>
         <p className="mt-2 max-w-xl text-sm text-muted-foreground">{cat.descripcion}</p>
       </header>

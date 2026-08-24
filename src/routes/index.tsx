@@ -55,7 +55,7 @@ function Discover() {
               params={{ slug: c.slug }}
               className="rounded-full bg-card px-4 py-2 text-sm font-medium shadow-soft transition-transform hover:-translate-y-0.5"
             >
-              {c.emoji} {c.label}
+              {c.label}
             </Link>
           ))}
         </div>

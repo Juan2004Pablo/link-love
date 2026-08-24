@@ -22,7 +22,7 @@ export function AdsProvider({ children }: { children: ReactNode }) {
   const [views, setViews] = useState(0);
   const [bannerClosed, setBannerClosed] = useState(false);
   const [modalAd, setModalAd] = useState<Sponsored | null>(null);
-  const [lastModalAt, setLastModalAt] = useState(0);
+  const [lastModalAt, setLastModalAt] = useState(() => Date.now());
 
   useEffect(() => {
     let cancelled = false;

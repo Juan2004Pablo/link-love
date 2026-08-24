@@ -40,7 +40,7 @@ export function Header() {
             className="whitespace-nowrap rounded-full bg-surface px-3 py-1.5 text-sm text-muted-foreground"
             activeProps={{ className: "bg-primary text-primary-foreground" }}
           >
-            {c.emoji} {c.label}
+            {c.label}
           </Link>
         ))}
       </nav>
