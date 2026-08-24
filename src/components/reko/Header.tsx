@@ -24,6 +24,7 @@ export function Header() {
         </nav>
         <Link
           to="/buscar"
+          search={{ q: "" }}
           className="ml-auto inline-flex items-center gap-2 rounded-full bg-surface px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <Search className="size-4" />
