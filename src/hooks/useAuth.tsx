@@ -39,22 +39,56 @@ const AuthContext = createContext<AuthContextValue>({
 
 export const useAuth = () => useContext(AuthContext);
 
+async function createProfileFor(user: User): Promise<AuthProfile | null> {
+  const meta = (user.user_metadata ?? {}) as Record<string, string>;
+  const base =
+    (meta["username"] || meta["full_name"] || user.email?.split("@")[0] || "creador")
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^a-z0-9_]/g, "")
+      .slice(0, 20) || "creador";
+
+  for (let i = 0; i < 4; i += 1) {
+    const username = i === 0 ? base : `${base}${Math.floor(Math.random() * 9000 + 1000)}`;
+    const { data, error } = await supabase
+      .from("profiles")
+      .insert({
+        user_id: user.id,
+        username,
+        full_name: meta["full_name"] || meta["name"] || user.email?.split("@")[0] || "Nuevo perfil",
+        avatar_url: meta["avatar_url"] ?? null,
+        account_type: (meta["account_type"] === "creador" ? "creador" : "seguidor") as "creador" | "seguidor",
+      })
+      .select("id, user_id, username, full_name, avatar_url, account_type")
+      .maybeSingle();
+    if (data) return data as AuthProfile;
+    if (error && !error.message.includes("duplicate")) return null;
+  }
+  return null;
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<AuthProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const loadProfile = useCallback(async (userId: string | undefined) => {
-    if (!userId) {
+  const loadProfile = useCallback(async (user: User | undefined | null) => {
+    if (!user) {
       setProfile(null);
       return;
     }
     const { data } = await supabase
       .from("profiles")
       .select("id, user_id, username, full_name, avatar_url, account_type")
-      .eq("user_id", userId)
+      .eq("user_id", user.id)
       .maybeSingle();
-    setProfile((data as AuthProfile | null) ?? null);
+    if (data) {
+      setProfile(data as AuthProfile);
+      return;
+    }
+    const created = await createProfileFor(user);
+    setProfile(created);
   }, []);
 
   useEffect(() => {
@@ -62,12 +96,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(next);
       setLoading(false);
       // Evitar llamadas a Supabase dentro del callback.
-      setTimeout(() => void loadProfile(next?.user?.id), 0);
+      setTimeout(() => void loadProfile(next?.user), 0);
     });
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
       setLoading(false);
-      void loadProfile(data.session?.user?.id);
+      void loadProfile(data.session?.user);
     });
     return () => sub.subscription.unsubscribe();
   }, [loadProfile]);
@@ -82,7 +116,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await supabase.auth.signOut();
         setProfile(null);
       },
-      refreshProfile: () => loadProfile(session?.user?.id),
+      refreshProfile: () => loadProfile(session?.user),
     }),
     [session, profile, loading, loadProfile],
   );
