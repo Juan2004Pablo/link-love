@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Search } from "lucide-react";
 import { CATEGORIAS } from "@/lib/reko";
+import { UserMenu } from "./UserMenu";
 
 export function Header() {
   return (
@@ -30,6 +31,7 @@ export function Header() {
           <Search className="size-4" />
           <span className="hidden sm:inline">Buscar creadores</span>
         </Link>
+        <UserMenu />
       </div>
       <nav className="flex gap-2 overflow-x-auto px-4 pb-3 sm:hidden">
         {CATEGORIAS.map((c) => (

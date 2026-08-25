@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as UsernameRouteImport } from './routes/$username'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as BuscarRouteImport } from './routes/buscar'
 import { Route as CategoriaSlugRouteImport } from './routes/categoria.$slug'
 import { Route as RIdRouteImport } from './routes/r.$id'
@@ -23,6 +24,11 @@ const IndexRoute = IndexRouteImport.update({
 const UsernameRoute = UsernameRouteImport.update({
   id: '/$username',
   path: '/$username',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BuscarRoute = BuscarRouteImport.update({
@@ -44,6 +50,7 @@ const RIdRoute = RIdRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$username': typeof UsernameRoute
+  '/auth': typeof AuthRoute
   '/buscar': typeof BuscarRoute
   '/categoria/$slug': typeof CategoriaSlugRoute
   '/r/$id': typeof RIdRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$username': typeof UsernameRoute
+  '/auth': typeof AuthRoute
   '/buscar': typeof BuscarRoute
   '/categoria/$slug': typeof CategoriaSlugRoute
   '/r/$id': typeof RIdRoute
@@ -59,22 +67,31 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$username': typeof UsernameRoute
+  '/auth': typeof AuthRoute
   '/buscar': typeof BuscarRoute
   '/categoria/$slug': typeof CategoriaSlugRoute
   '/r/$id': typeof RIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$username' | '/buscar' | '/categoria/$slug' | '/r/$id'
+  fullPaths:
+    '/' | '/$username' | '/auth' | '/buscar' | '/categoria/$slug' | '/r/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$username' | '/buscar' | '/categoria/$slug' | '/r/$id'
+  to: '/' | '/$username' | '/auth' | '/buscar' | '/categoria/$slug' | '/r/$id'
   id:
-    '__root__' | '/' | '/$username' | '/buscar' | '/categoria/$slug' | '/r/$id'
+    | '__root__'
+    | '/'
+    | '/$username'
+    | '/auth'
+    | '/buscar'
+    | '/categoria/$slug'
+    | '/r/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   UsernameRoute: typeof UsernameRoute
+  AuthRoute: typeof AuthRoute
   BuscarRoute: typeof BuscarRoute
   CategoriaSlugRoute: typeof CategoriaSlugRoute
   RIdRoute: typeof RIdRoute
@@ -94,6 +111,13 @@ declare module '@tanstack/react-router' {
       path: '/$username'
       fullPath: '/$username'
       preLoaderRoute: typeof UsernameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/buscar': {
@@ -123,6 +147,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   UsernameRoute: UsernameRoute,
+  AuthRoute: AuthRoute,
   BuscarRoute: BuscarRoute,
   CategoriaSlugRoute: CategoriaSlugRoute,
   RIdRoute: RIdRoute,

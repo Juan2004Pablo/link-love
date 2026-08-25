@@ -13,6 +13,8 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AdsProvider } from "@/components/reko/AdsProvider";
 import { Header } from "@/components/reko/Header";
+import { AuthProvider } from "@/hooks/useAuth";
+import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
   return (
@@ -123,6 +125,7 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      <AuthProvider>
       <AdsProvider>
         <Header />
         {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
@@ -131,6 +134,8 @@ function RootComponent() {
           Reko · Recomendaciones reales de creadores LATAM
         </footer>
       </AdsProvider>
+      <Toaster />
+      </AuthProvider>
     </QueryClientProvider>
   );
 }
