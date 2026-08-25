@@ -22,14 +22,14 @@ export function UserMenu() {
       <div className="flex items-center gap-2">
         <Link
           to="/auth"
-          search={{ mode: "login" }}
+          search={{ mode: "login", tipo: undefined, next: undefined }}
           className="hidden rounded-full px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground sm:inline-flex"
         >
           Iniciar sesión
         </Link>
         <Link
           to="/auth"
-          search={{ mode: "registro", tipo: "creador" }}
+          search={{ mode: "registro", tipo: "creador", next: undefined }}
           className="rounded-full bg-primary px-3 py-2 text-sm font-semibold text-primary-foreground shadow-soft transition-transform hover:-translate-y-0.5"
         >
           Únete como creador
