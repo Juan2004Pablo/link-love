@@ -40,18 +40,20 @@ export const getCreator = createServerFn({ method: "GET" })
       .select(PROFILE_FIELDS)
       .eq("username", data.username.toLowerCase())
       .maybeSingle();
-    if (!profile) return { profile: null, recommendations: [], collections: [], links: [] };
+    if (!profile) return { profile: null, recommendations: [], collections: [], links: [], followersCount: 0 };
 
-    const [recs, cols, links] = await Promise.all([
+    const [recs, cols, links, followers] = await Promise.all([
       db.from("recommendations").select(REC_FIELDS).eq("creator_id", profile.id).order("created_at", { ascending: false }),
       db.from("collections").select("id, name, type, position").eq("creator_id", profile.id).order("position"),
       db.from("recommendation_collections").select("recommendation_id, collection_id"),
+      db.from("follows").select("follower_id", { count: "exact", head: true }).eq("creator_id", profile.id),
     ]);
     return {
       profile,
       recommendations: recs.data ?? [],
       collections: cols.data ?? [],
       links: links.data ?? [],
+      followersCount: followers.count ?? 0,
     };
   });
 
