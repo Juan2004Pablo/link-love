@@ -65,15 +65,6 @@ export function UserMenu() {
               Mi perfil
             </Link>
           ) : null}
-          {profile?.account_type === "creador" ? (
-            <Link
-              to="/panel"
-              onClick={() => setOpen(false)}
-              className="block rounded-xl px-3 py-2 text-sm transition-colors hover:bg-surface"
-            >
-              Panel de creador
-            </Link>
-          ) : null}
           <button
             type="button"
             onClick={async () => {

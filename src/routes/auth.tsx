@@ -4,7 +4,11 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 
-type AuthSearch = { mode?: "login" | "registro"; tipo?: "creador" | "seguidor"; next?: string };
+type AuthSearch = {
+  mode: "login" | "registro";
+  tipo: "creador" | "seguidor" | undefined;
+  next: string | undefined;
+};
 
 export const Route = createFileRoute("/auth")({
   validateSearch: (search: Record<string, unknown>): AuthSearch => ({
@@ -68,7 +72,10 @@ function AuthPage() {
     if (mode === "login") {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       setBusy(false);
-      if (error) return toast.error("No pudimos entrar: " + error.message);
+      if (error) {
+        toast.error("No pudimos entrar: " + error.message);
+        return;
+      }
       toast.success("¡Bienvenido de vuelta!");
     } else {
       const { data, error } = await supabase.auth.signUp({
@@ -80,7 +87,10 @@ function AuthPage() {
         },
       });
       setBusy(false);
-      if (error) return toast.error("No pudimos crear la cuenta: " + error.message);
+      if (error) {
+        toast.error("No pudimos crear la cuenta: " + error.message);
+        return;
+      }
       if (!data.session) {
         toast.success("Revisa tu correo para confirmar la cuenta.");
       } else {
