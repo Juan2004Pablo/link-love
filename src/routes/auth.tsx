@@ -2,6 +2,7 @@ import { createFileRoute, useNavigate, useSearch } from "@tanstack/react-router"
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { lovable } from "@/integrations/lovable";
 import { useAuth } from "@/hooks/useAuth";
 
 type AuthSearch = {
@@ -53,16 +54,11 @@ function AuthPage() {
 
   const handleGoogle = async () => {
     setBusy(true);
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: `${window.location.origin}${search.next ?? "/"}`,
-        queryParams: { prompt: "select_account" },
-      },
-    });
-    if (error) {
+    try {
+      await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
+    } catch (err) {
       setBusy(false);
-      toast.error(error.message);
+      toast.error(err instanceof Error ? err.message : "No pudimos conectar con Google");
     }
   };
 
