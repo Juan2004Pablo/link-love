@@ -5,6 +5,7 @@ import { getCreator } from "@/lib/reko.functions";
 import { categoriaLabel, semanaLabel, type Profile, type Recommendation } from "@/lib/reko";
 import { RecGrid } from "@/components/reko/RecGrid";
 import { useAds } from "@/components/reko/AdsProvider";
+import { ProfileActions } from "@/components/reko/ProfileActions";
 
 export const Route = createFileRoute("/$username")({
   loader: async ({ params }) => {
@@ -122,6 +123,12 @@ function CreatorProfile() {
             );
           })}
         </div>
+        <ProfileActions
+          profileId={profile.id}
+          username={profile.username}
+          recCount={recs.length}
+          followersCount={data.followersCount ?? 0}
+        />
       </header>
 
       <nav className="mt-6 flex gap-2 overflow-x-auto pb-2">
